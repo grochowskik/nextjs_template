@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend Template
+
+A reusable frontend starter template for quickly bootstrapping new projects.
+
+## Features
+
+- Clean project structure
+- Ready-to-use development environment
+- Environment variable support
+- Easy to extend and customize
+- Suitable for building modern web applications
+- Custom API integration
+- Added authentication support
 
 ## Getting Started
 
-First, run the development server:
+### 1. Create a project from the template
+
+Use this repository as a template and create a new repository.
+
+Or clone it directly:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/YOUR_USERNAME/frontend-template.git .
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configure environment variables
 
-## Learn More
+Copy the example environment file:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Update the variables as needed.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Run the development server
 
-## Deploy on Vercel
+```bash
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application should now be running locally.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+src/
+
+ ├── app/           # Application pages / views
+ ├── components/    # Reusable UI components
+ ├── config/        # Storing app config
+ ├── core/          # API calls and external services
+ ├── hooks/         # Custom hooks
+ ├── providers/     # Setup app providers
+ ├── redux/         # Redux store
+ ├── utils/         # Helper functions
+
+```
+
+## Environment Variables
+
+Example `.env.example`:
+
+```
+API_URL=http://localhost:3000
+```
+
+## Customization
+
+You can modify this template to fit your needs:
+
+- Add UI frameworks
+- Add authentication
+- Add API integrations
+- Extend folder structure
+
+## License
+
+This project is open source and available under the MIT License.
