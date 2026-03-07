@@ -1,4 +1,4 @@
-export interface Notes {
+export interface Note {
   id: string;
   amount: number;
   currency: string;
@@ -10,37 +10,41 @@ export interface Notes {
   metadata?: Record<string, unknown>;
 }
 
-export interface NotesListRequest {
+export interface NoteListRequest {
   page?: number;
   limit?: number;
-  status?: Notes['status'];
-  type?: Notes['type'];
+  status?: Note['status'];
+  type?: Note['type'];
   startDate?: string;
   endDate?: string;
   sortBy?: 'createdAt' | 'amount' | 'status';
   sortOrder?: 'asc' | 'desc';
 }
 
-export interface NotesListResponse {
-  notess: Notes[];
+export interface NoteListResponse {
+  notes: Note[];
   total: number;
   page: number;
   limit: number;
   hasMore: boolean;
 }
 
-export interface CreateNotesRequest {
+export interface CreateNoteRequest {
   amount: number;
   currency: string;
-  type: Notes['type'];
+  type: Note['type'];
   description?: string;
   recipientId?: string;
   metadata?: Record<string, unknown>;
 }
 
-export interface UpdateNotesRequest {
-  notesId: string;
-  status?: Notes['status'];
+export interface UpdateNoteRequest {
+  noteId: string;
+  status?: Note['status'];
   description?: string;
   metadata?: Record<string, unknown>;
+}
+
+export interface CancelNoteRequest {
+  noteId: string;
 }

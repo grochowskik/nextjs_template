@@ -2,6 +2,7 @@ export interface SessionData {
   is_user_logged_in: boolean;
   sid: string;
   csrf_token: string;
+  lifetime?: number;
 }
 
 export interface ApiError {
@@ -11,7 +12,6 @@ export interface ApiError {
 }
 
 export interface ApiResponse<T = unknown> {
-  data?: T;
   result?: T;
   session?: SessionData;
   error?: string | ApiError;

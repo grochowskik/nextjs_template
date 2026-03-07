@@ -2,98 +2,55 @@ import {
   useMutation,
   useQueryClient,
   UseMutationResult,
-  UseMutationOptions,
-  InvalidateQueryFilters,
-  QueryKey,
 } from '@tanstack/react-query';
 import ErrorClassifier from './ErrorClassifier';
 import { ApiResponse } from './types';
 import { getRequestClass } from './requestInstance';
 
-interface ApiMutationOptions<TRequest, TResponse, TError = unknown>
-  extends Omit<UseMutationOptions<TResponse, TError, TRequest>, 'mutationFn'> {
-  queryKey?: QueryKey;
-  invalidateQueriesList?: InvalidateQueryFilters;
+interface ApiMutationOptions<TRequest, TResponse> {
+  invalidateQueriesList?: string[];
+  onSuccess?: (data: TResponse, variables: TRequest) => void;
+  onError?: (error: Error, variables: TRequest) => void;
 }
 
-interface ApiMutationResult<TRequest, TResponse, TError = unknown>
-  extends Omit<UseMutationResult<TResponse, TError, TRequest>, 'mutate'> {
+interface ApiMutationResult<TRequest, TResponse> extends Omit<
+  UseMutationResult<TResponse, Error, TRequest>,
+  'mutate'
+> {
   mutate: (variables: TRequest) => Promise<TResponse>;
-  mutateSync: UseMutationResult<TResponse, TError, TRequest>['mutate'];
+  mutateSync: UseMutationResult<TResponse, Error, TRequest>['mutate'];
 }
 
-function useApiMutation<
-  TRequest = unknown,
-  TResponse = unknown,
-  TError = unknown
->(
+function useApiMutation<TRequest = unknown, TResponse = unknown>(
   url: string,
-  options: ApiMutationOptions<TRequest, TResponse, TError> = {}
-): ApiMutationResult<TRequest, TResponse, TError> {
+  options: ApiMutationOptions<TRequest, TResponse> = {},
+): ApiMutationResult<TRequest, TResponse> {
   const queryClient = useQueryClient();
+  const { invalidateQueriesList, onSuccess, onError } = options;
 
-  const {
-    queryKey,
-    invalidateQueriesList,
-    onSuccess,
-    onError,
-    ...mutationOptions
-  } = options;
-
-  const mutation = useMutation<TResponse, TError, TRequest>({
+  const mutation = useMutation<TResponse, Error, TRequest>({
     mutationFn: async (params: TRequest): Promise<TResponse> => {
       const response = await getRequestClass().post<ApiResponse<TResponse>>(
         url,
-        params
+        params,
       );
       return response.data.result as TResponse;
     },
-    onSuccess: (response, variables, context) => {
-      if (queryKey) {
-        queryClient.setQueryData(queryKey, response);
-      }
-
+    onSuccess: (data, variables) => {
       if (invalidateQueriesList) {
-        queryClient.invalidateQueries(invalidateQueriesList);
+        invalidateQueriesList.forEach((key) =>
+          queryClient.invalidateQueries({ queryKey: [key] }),
+        );
       }
-
-      if (onSuccess) {
-        (
-          onSuccess as (
-            data: TResponse,
-            variables: TRequest,
-            context: unknown
-          ) => void
-        )(response, variables, context);
-      }
+      onSuccess?.(data, variables);
     },
-    onError: (error, variables, context) => {
-      const classified = ErrorClassifier.classify(error);
-
-      console.error('[Mutation Error]', {
-        url,
-        errorType: classified.type,
-        shouldRetry: classified.shouldRetry,
-        variables,
-      });
-
-      if (onError) {
-        (
-          onError as (
-            error: TError,
-            variables: TRequest,
-            context: unknown
-          ) => void
-        )(error, variables, context);
-      }
+    onError: (error, variables) => {
+      onError?.(error, variables);
     },
-    retry: (failureCount, error) => {
-      return ErrorClassifier.shouldRetry(error, failureCount);
-    },
-    retryDelay: (attemptIndex, error) => {
-      return ErrorClassifier.getRetryDelay(error, attemptIndex);
-    },
-    ...mutationOptions,
+    retry: (failureCount, error) =>
+      ErrorClassifier.shouldRetry(error, failureCount),
+    retryDelay: (attemptIndex, error) =>
+      ErrorClassifier.getRetryDelay(error, attemptIndex),
   });
 
   return {

@@ -1,42 +1,31 @@
 import { useApiQuery, useApiMutation } from '@/core';
 import {
-  CreateNotesRequest,
-  Notes,
-  NotesListRequest,
-  NotesListResponse,
-  UpdateNotesRequest,
+  CancelNoteRequest,
+  CreateNoteRequest,
+  Note,
+  NoteListRequest,
+  NoteListResponse,
+  UpdateNoteRequest,
 } from './types';
 
-export const useNotesList = (
-  params: NotesListRequest = {},
-  options?: { enableCache?: boolean; refetchInterval?: number },
-) => {
-  return useApiQuery<NotesListResponse>('/notes/list', params, {
-    enableCache: options?.enableCache ?? true,
-    refetchInterval: options?.refetchInterval,
+export const useNotesList = (params?: NoteListRequest) => {
+  return useApiQuery<NoteListResponse>('/notes/list', params);
+};
+
+export const useCreateNote = () => {
+  return useApiMutation<CreateNoteRequest, Note>('/notes/create', {
+    invalidateQueriesList: ['/notes/list'],
   });
 };
 
-export const useCreateNotes = () => {
-  return useApiMutation<CreateNotesRequest, Notes>('/notes/create', {
-    invalidateQueriesList: {
-      queryKey: ['/notes/list'],
-    },
+export const useUpdateNote = () => {
+  return useApiMutation<UpdateNoteRequest, Note>('/notes/update', {
+    invalidateQueriesList: ['/notes/list', '/notes/get'],
   });
 };
 
-export const useUpdateNotes = () => {
-  return useApiMutation<UpdateNotesRequest, Notes>('/notes/update', {
-    invalidateQueriesList: {
-      queryKey: ['/notes/list', '/notes/get'],
-    },
-  });
-};
-
-export const useCancelNotes = () => {
-  return useApiMutation<{ notesId: string }, Notes>('/notes/cancel', {
-    invalidateQueriesList: {
-      queryKey: ['/notes/list', '/notes/get'],
-    },
+export const useCancelNote = () => {
+  return useApiMutation<CancelNoteRequest, Note>('/notes/cancel', {
+    invalidateQueriesList: ['/notes/list', '/notes/get'],
   });
 };

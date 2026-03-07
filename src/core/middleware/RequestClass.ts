@@ -17,6 +17,8 @@ import {
   InterceptorConfig,
 } from './types';
 
+type ConfigWithMetadata = InternalAxiosRequestConfig & { metadata?: RequestMetadata };
+
 const INTERCEPTORS = {
   loginListener,
 } as const;
@@ -63,11 +65,7 @@ export class RequestClass {
           const requestId = RequestIdGenerator.generate();
           config.headers['X-Request-ID'] = requestId;
 
-          (
-            config as InternalAxiosRequestConfig & {
-              metadata?: RequestMetadata;
-            }
-          ).metadata = {
+          (config as ConfigWithMetadata).metadata = {
             requestId,
             timestamp: startTime,
             url: config.url || '',
@@ -94,9 +92,9 @@ export class RequestClass {
         this.trackPerformance(response.config, Date.now());
         return response;
       },
-      async (error: AxiosError): Promise<never> => {
+      (error: AxiosError): Promise<never> => {
         this.trackError(error);
-        await responseErrorHandler(error);
+        responseErrorHandler(error);
         return Promise.reject(error);
       },
     );
@@ -119,10 +117,7 @@ export class RequestClass {
     console.error('[API Error]', message);
   }
 
-  private trackPerformance(
-    config: InternalAxiosRequestConfig & { metadata?: RequestMetadata },
-    endTime: number,
-  ): void {
+  private trackPerformance(config: ConfigWithMetadata, endTime: number): void {
     if (!this.config.enablePerformanceTracking || !config.metadata) return;
 
     const duration = endTime - config.metadata.timestamp;
@@ -141,9 +136,7 @@ export class RequestClass {
   private trackError(error: AxiosError): void {
     if (!this.config.enablePerformanceTracking) return;
 
-    const config = error.config as InternalAxiosRequestConfig & {
-      metadata?: RequestMetadata;
-    };
+    const config = error.config as ConfigWithMetadata;
     const metadata = config?.metadata;
 
     if (metadata) {

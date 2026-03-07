@@ -8,17 +8,6 @@ class RequestIdGenerator {
     return `${this.prefix}${this.counter}`;
   }
 
-  static extract(
-    requestId: string
-  ): { timestamp: number; counter: number } | null {
-    const match = requestId.match(/^(?:web|ssr)-(\d+)-(\d+)$/);
-    if (!match) return null;
-
-    return {
-      timestamp: parseInt(match[1], 10),
-      counter: parseInt(match[2], 10),
-    };
-  }
 }
 
 export default RequestIdGenerator;

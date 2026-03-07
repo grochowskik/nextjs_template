@@ -1,9 +1,10 @@
-import { AxiosError } from 'axios';
+import axios from 'axios';
+import type { AxiosError } from 'axios';
 import { ErrorType, ClassifiedError } from './types';
 
 class ErrorClassifier {
   static classify(error: unknown): ClassifiedError {
-    if (!this.isAxiosError(error)) {
+    if (!axios.isAxiosError(error)) {
       return {
         type: ErrorType.UNKNOWN,
         originalError: error,
@@ -56,15 +57,6 @@ class ErrorClassifier {
       originalError: error,
       shouldRetry: false,
     };
-  }
-
-  private static isAxiosError(error: unknown): error is AxiosError {
-    return (
-      typeof error === 'object' &&
-      error !== null &&
-      'isAxiosError' in error &&
-      error.isAxiosError === true
-    );
   }
 
   private static getRetryAfter(error: AxiosError): number | undefined {

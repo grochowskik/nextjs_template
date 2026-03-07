@@ -1,42 +1,35 @@
-import {
-  UseQueryResult,
-  useQuery,
-  UseQueryOptions,
-} from '@tanstack/react-query';
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import ErrorClassifier from './ErrorClassifier';
 import { ApiResponse } from './types';
 import { getRequestClass } from './requestInstance';
 
-const CACHE_TIME_MINUTES = 5;
-const CACHE_TIME_MS = CACHE_TIME_MINUTES * 60 * 1000;
+const CACHE_TIME = 5 * 60 * 1000;
 
-interface ApiQueryOptions<TData, TError = Error>
-  extends Omit<UseQueryOptions<TData, TError>, 'queryKey' | 'queryFn'> {
-  enableCache?: boolean;
+interface ApiQueryOptions {
+  enabled?: boolean;
 }
-
-function useApiQuery<TData = unknown, TError = Error>(
+function useApiQuery<TData = unknown, TParams = unknown>(
   url: string,
-  params?: unknown,
-  options: ApiQueryOptions<TData, TError> = {}
-): UseQueryResult<TData, TError> {
-  const { enableCache, ...queryOptions } = options;
-
-  return useQuery<TData, TError>({
+  params?: TParams,
+  options: ApiQueryOptions = {},
+): UseQueryResult<TData, Error> {
+  return useQuery<TData, Error>({
     queryKey: [url, params],
     queryFn: async (): Promise<TData> => {
-      const response = await getRequestClass().post<ApiResponse<TData>>(url, params);
+      const response = await getRequestClass().post<ApiResponse<TData>>(
+        url,
+        params,
+      );
       return response.data.result as TData;
     },
-    staleTime: enableCache ? CACHE_TIME_MS : undefined,
+    staleTime: CACHE_TIME,
+    gcTime: CACHE_TIME,
     refetchOnWindowFocus: false,
-    retry: (failureCount, error) => {
-      return ErrorClassifier.shouldRetry(error, failureCount);
-    },
-    retryDelay: (attemptIndex, error) => {
-      return ErrorClassifier.getRetryDelay(error, attemptIndex);
-    },
-    ...queryOptions,
+    retry: (failureCount, error) =>
+      ErrorClassifier.shouldRetry(error, failureCount),
+    retryDelay: (attemptIndex, error) =>
+      ErrorClassifier.getRetryDelay(error, attemptIndex),
+    ...options,
   });
 }
 

@@ -1,7 +1,7 @@
 import { toastError } from '@/hooks/useError';
 import type { AxiosError } from 'axios';
 
-const responseErrorHandler = async (error: AxiosError): Promise<void> => {
+const responseErrorHandler = (error: AxiosError): void => {
   toastError(error);
 };
 

@@ -10,7 +10,7 @@ interface ErrorData {
 }
 
 interface ResponseData {
-  session?: Pick<SessionData, 'is_user_logged_in'> & { lifetime?: number };
+  session?: Pick<SessionData, 'is_user_logged_in' | 'lifetime'>;
   error?: ErrorData;
 }
 
@@ -22,7 +22,7 @@ const AUTH_MESSAGES = {
 const LOGOUT_REASON_MESSAGES: Record<string, string> = {
   'SESSION-REQUIRED': 'Sesja wygasła.',
   'NOT-AUTHORIZED': 'Nie masz uprawnień do wykonania tej operacji.',
-} as const;
+};
 
 const setAuthCookie = (value: boolean) => {
   if (value) {
