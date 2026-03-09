@@ -107,7 +107,6 @@ class SessionManager {
       console.error('Error clearing session:', error);
     }
   }
-
 }
 
 export default SessionManager;

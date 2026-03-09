@@ -46,7 +46,8 @@ const loginListener = <T = unknown>(
       toastNotification({
         title: AUTH_MESSAGES.logoutTitle,
         details:
-          LOGOUT_REASON_MESSAGES[errorCode ?? ''] ?? AUTH_MESSAGES.logoutReasonUnknown,
+          LOGOUT_REASON_MESSAGES[errorCode ?? ''] ??
+          AUTH_MESSAGES.logoutReasonUnknown,
       });
     }
 

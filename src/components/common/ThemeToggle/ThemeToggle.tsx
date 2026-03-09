@@ -1,20 +1,38 @@
 'use client';
 
-import { styles } from './ThemeToggle.styles';
+import { useSyncExternalStore } from 'react';
+import { Toggle } from '@/components';
+
+const themeStore = {
+  getSnapshot: () => document.documentElement.getAttribute('data-theme'),
+  subscribe: (callback: () => void) => {
+    const observer = new MutationObserver(callback);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  },
+  getServerSnapshot: () => 'light',
+};
 
 const ThemeToggle = () => {
+  const theme = useSyncExternalStore(
+    themeStore.subscribe,
+    themeStore.getSnapshot,
+    themeStore.getServerSnapshot,
+  );
+
   const toggle = () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
+    const next = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
   };
 
+  const isDark = theme === 'dark';
+
   return (
-    <button onClick={toggle} aria-label="Toggle theme" className={styles.toggle}>
-      <span className="[html[data-theme='dark']_&]:hidden">Dark</span>
-      <span className="[html[data-theme='light']_&]:hidden">Light</span>
-    </button>
+    <Toggle checked={isDark} onChange={toggle} aria-label="Toggle Theme" />
   );
 };
 

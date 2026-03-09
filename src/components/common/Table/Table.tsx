@@ -1,12 +1,16 @@
+import {
+  TableBody,
+  TableBodyCell,
+  TableHeader,
+  TableHeaderCell,
+  TablePageSize,
+  TablePagination,
+  TableRow,
+  TableSkeleton,
+} from '@/components';
 import { tableStyles } from './Table.styles';
 import { TableProps, TableHeaderProps, TableBodyProps } from './Table.type';
-import { TableHeader } from './TableHeader';
-import { TableBody } from './TableBody';
-import { TableRow } from './TableRow';
-import { TableHeaderCell } from './TableHeaderCell';
-import { TableCell } from './TableCell';
-import { TableSkeleton } from './TableSkeleton';
-import { TablePagination } from './TablePagination';
+
 import { cn } from '@/utils';
 import { Children, isValidElement, cloneElement } from 'react';
 
@@ -27,7 +31,9 @@ function TableRoot({
       ) {
         Children.forEach(child.props.children, (row) => {
           if (isValidElement(row) && row.type === TableRow) {
-            columnCount = Children.count((row.props as { children?: React.ReactNode }).children);
+            columnCount = Children.count(
+              (row.props as { children?: React.ReactNode }).children,
+            );
           }
         });
       }
@@ -63,8 +69,9 @@ const Table = Object.assign(TableRoot, {
   Body: TableBody,
   Row: TableRow,
   HeaderCell: TableHeaderCell,
-  Cell: TableCell,
+  Cell: TableBodyCell,
   Skeleton: TableSkeleton,
+  PageSize: TablePageSize,
   Pagination: TablePagination,
 });
 

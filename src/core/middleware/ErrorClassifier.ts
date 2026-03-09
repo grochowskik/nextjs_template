@@ -71,7 +71,7 @@ class ErrorClassifier {
   static shouldRetry(
     error: unknown,
     attemptNumber: number,
-    maxAttempts: number = 3
+    maxAttempts: number = 3,
   ): boolean {
     if (attemptNumber >= maxAttempts) return false;
 

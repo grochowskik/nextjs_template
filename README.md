@@ -4,18 +4,18 @@ A production-ready Next.js starter template for quickly bootstrapping modern web
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| Framework | [Next.js 16](https://nextjs.org/) (App Router) |
-| Language | [TypeScript 5](https://www.typescriptlang.org/) |
-| Styling | [Tailwind CSS 4](https://tailwindcss.com/) |
+| Category         | Technology                                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------------------------- |
+| Framework        | [Next.js 16](https://nextjs.org/) (App Router)                                                           |
+| Language         | [TypeScript 5](https://www.typescriptlang.org/)                                                          |
+| Styling          | [Tailwind CSS 4](https://tailwindcss.com/)                                                               |
 | State Management | [Redux Toolkit](https://redux-toolkit.js.org/) + [redux-persist](https://github.com/rt2zz/redux-persist) |
-| Server State | [TanStack Query v5](https://tanstack.com/query/latest) |
-| Forms | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
-| HTTP Client | [Axios](https://axios-http.com/) |
-| Icons | [Lucide React](https://lucide.dev/) |
-| Notifications | [React Toastify](https://fkhadra.github.io/react-toastify/) |
-| Package Manager | [pnpm](https://pnpm.io/) |
+| Server State     | [TanStack Query v5](https://tanstack.com/query/latest)                                                   |
+| Forms            | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)                                |
+| HTTP Client      | [Axios](https://axios-http.com/)                                                                         |
+| Icons            | [Lucide React](https://lucide.dev/)                                                                      |
+| Notifications    | [React Toastify](https://fkhadra.github.io/react-toastify/)                                              |
+| Package Manager  | [pnpm](https://pnpm.io/)                                                                                 |
 
 ## Features
 
@@ -95,12 +95,12 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start the development server |
-| `pnpm build` | Build for production |
-| `pnpm start` | Start the production server |
-| `pnpm lint` | Run ESLint |
+| Command      | Description                  |
+| ------------ | ---------------------------- |
+| `pnpm dev`   | Start the development server |
+| `pnpm build` | Build for production         |
+| `pnpm start` | Start the production server  |
+| `pnpm lint`  | Run ESLint                   |
 
 ## Customization
 

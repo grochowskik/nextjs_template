@@ -3,16 +3,16 @@ export const buttonStyles = {
 
   variants: {
     primary:
-      'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 shadow-sm shadow-indigo-200',
+      'bg-accent text-white hover:bg-accent-foreground focus:ring-accent shadow-sm',
     secondary:
       'bg-surface text-text-muted border border-border hover:bg-surface-hover focus:ring-border',
-    danger: 'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500',
+    danger: 'bg-error text-white hover:bg-error-foreground focus:ring-error',
   },
 
   disabledStyle: {
-    primary: 'opacity-70 cursor-not-allowed bg-indigo-400 hover:bg-indigo-400',
+    primary: 'opacity-60 cursor-not-allowed',
     secondary: 'opacity-50 cursor-not-allowed bg-surface-subtle',
-    danger: 'opacity-70 cursor-not-allowed bg-rose-400',
+    danger: 'opacity-60 cursor-not-allowed',
   },
 
   content: {

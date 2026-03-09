@@ -1,6 +1,5 @@
 export const accordionStyles = {
-  summary:
-    'flex bg-transparent items-center w-full gap-x-2 cursor-pointer',
+  summary: 'flex bg-transparent items-center w-full gap-x-2 cursor-pointer',
   icon: 'transition-transform duration-[0.2s]',
   expandedIcon: 'rotate-180',
   content: {

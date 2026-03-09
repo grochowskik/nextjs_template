@@ -7,7 +7,6 @@ class RequestIdGenerator {
     this.counter = (this.counter + 1) % 100000;
     return `${this.prefix}${this.counter}`;
   }
-
 }
 
 export default RequestIdGenerator;

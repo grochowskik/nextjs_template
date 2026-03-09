@@ -7,14 +7,17 @@ export interface TableProps extends HTMLAttributes<HTMLDivElement> {
   loadingRows?: number;
 }
 
-export interface TableHeaderProps
-  extends HTMLAttributes<HTMLTableSectionElement> {
+export interface TableHeaderProps extends HTMLAttributes<HTMLTableSectionElement> {
   children: ReactNode;
   className?: string;
 }
 
-export interface TableBodyProps
-  extends HTMLAttributes<HTMLTableSectionElement> {
+export interface TableBodyProps extends HTMLAttributes<HTMLTableSectionElement> {
+  children?: ReactNode;
+  className?: string;
+}
+
+export interface TableBodyCellProps extends HTMLAttributes<HTMLTableCellElement> {
   children?: ReactNode;
   className?: string;
 }
@@ -24,8 +27,7 @@ export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
   className?: string;
 }
 
-export interface TableHeaderCellProps
-  extends HTMLAttributes<HTMLTableCellElement> {
+export interface TableHeaderCellProps extends HTMLAttributes<HTMLTableCellElement> {
   children?: ReactNode;
   className?: string;
   width?: string | number;

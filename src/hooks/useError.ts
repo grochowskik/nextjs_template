@@ -42,10 +42,6 @@ export const toastError = (error: ErrorType, customTitle?: string) => {
   toast.error(customTitle ?? (normError.message as string), options);
 };
 
-/**
- * @param error - error z react-query
- * @param customTitle - wiadomość która ma się wyświetlic (PROD only)
- */
 export function useError(error: ErrorType | ErrorType[], customTitle?: string) {
   useEffect(() => {
     const errors = Array.isArray(error) ? error : [error];

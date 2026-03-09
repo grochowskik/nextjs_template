@@ -1,7 +1,6 @@
 'use client';
 
 import React, {
-  useEffect,
   useCallback,
   type ReactNode,
   useContext,
@@ -9,10 +8,11 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { modalStyles } from './Modal.styles';
+import { useEscapeKey } from '@/hooks';
 import { cn } from '@/utils';
-import { X } from 'lucide-react';
+import { LoaderIcon, ModalBody, ModalFooter, ModalHeader } from '@/components';
 
-const { overlay, backdrop, container, header, body, footer } = modalStyles;
+const { overlay, backdrop, container } = modalStyles;
 
 interface ModalContextValue {
   onClose?: () => void;
@@ -20,81 +20,32 @@ interface ModalContextValue {
 
 const ModalContext = createContext<ModalContextValue>({});
 
-const useModalContext = () => {
+export const useModalContext = () => {
   const context = useContext(ModalContext);
   return context;
 };
 
-const useEscapeKey = (callback: () => void, isActive: boolean) => {
-  useEffect(() => {
-    if (!isActive) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        callback();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [callback, isActive]);
-};
-
-interface BaseModalProps {
+interface ModalProps {
   children: ReactNode;
   show?: boolean;
+  loading?: boolean;
   onClose?: () => void;
   size?: keyof typeof container.sizes;
   role?: string;
 }
 
-interface ModalHeaderProps {
-  children: ReactNode;
-}
-
-interface ModalBodyProps {
-  children: ReactNode;
-}
-
-interface ModalFooterProps {
-  children: ReactNode;
-  align?: keyof typeof footer.alignment;
-}
-
-const ModalHeader: React.FC<ModalHeaderProps> = ({ children }) => {
-  const { onClose } = useModalContext();
-  return (
-    <div className={header.base}>
-      <div className={header.title}>{children}</div>
-      <X
-        onClick={onClose}
-        height={24}
-        width={24}
-        className={header.closeIcon}
-      />
-    </div>
-  );
-};
-
-const ModalBody: React.FC<ModalBodyProps> = ({ children }) => {
-  return <div className={body}>{children}</div>;
-};
-
-const ModalFooter: React.FC<ModalFooterProps> = ({
-  children,
-  align = 'right',
-}) => {
-  return (
-    <div className={cn([footer.base, footer.alignment[align]])}>{children}</div>
-  );
-};
-
-const Modal: React.FC<BaseModalProps> & {
+const Modal: React.FC<ModalProps> & {
   Header: typeof ModalHeader;
   Body: typeof ModalBody;
   Footer: typeof ModalFooter;
-} = ({ children, show, onClose, size = 'lg', role = 'dialog' }) => {
+} = ({
+  children,
+  show,
+  onClose,
+  size = 'lg',
+  role = 'dialog',
+  loading = false,
+}) => {
   const handleClose = useCallback(() => {
     onClose?.();
   }, [onClose]);
@@ -119,7 +70,13 @@ const Modal: React.FC<BaseModalProps> & {
         tabIndex={-1}
       >
         <ModalContext.Provider value={{ onClose: handleClose }}>
-          {children}
+          {loading ? (
+            <div className="flex items-center justify-center p-16">
+              <LoaderIcon width={40} height={40} />
+            </div>
+          ) : (
+            children
+          )}
         </ModalContext.Provider>
       </div>
     </div>

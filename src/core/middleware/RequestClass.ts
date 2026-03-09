@@ -17,7 +17,9 @@ import {
   InterceptorConfig,
 } from './types';
 
-type ConfigWithMetadata = InternalAxiosRequestConfig & { metadata?: RequestMetadata };
+type ConfigWithMetadata = InternalAxiosRequestConfig & {
+  metadata?: RequestMetadata;
+};
 
 const INTERCEPTORS = {
   loginListener,
