@@ -37,3 +37,4 @@ export { default as Input } from './layout/Form/Fields/FormInput';
 export { default as AmountInput } from './layout/Form/Fields/FormAmountInput';
 export { default as Navbar } from './layout/Navbar/Navbar';
 export { default as Page } from './layout/Page/Page';
+export { default as Section } from './layout/Section/Section';

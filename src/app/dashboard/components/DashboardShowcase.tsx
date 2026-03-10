@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Accordion,
@@ -13,27 +13,13 @@ import {
   LanguageSwitch,
   Modal,
   RadioSelect,
+  Section,
   Table,
   Tabs,
   ThemeToggle,
   Toggle,
 } from '@/components';
 import { useRedirect } from '@/hooks';
-
-const Section = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) => (
-  <div className="flex flex-col gap-4 p-6 bg-surface rounded-lg border border-border">
-    <h2 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
-      {title}
-    </h2>
-    <div className="flex flex-wrap gap-3 items-start">{children}</div>
-  </div>
-);
 
 const radioOptions = [
   { label: 'Option A', value: 'a' },
