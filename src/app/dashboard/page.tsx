@@ -1,12 +1,15 @@
 'use client';
 
-import { Page } from '@/components';
-import { DashboardShowcase } from './components/DashboardShowcase';
+import { Page } from '@/ui';
+import { RouteGuard } from '@/core';
+import { DashboardShowcase } from '@/features/dashboard';
 
 export default function DashboardPage() {
   return (
-    <Page>
-      <DashboardShowcase />
-    </Page>
+    <RouteGuard requireAuth roles={['user', 'manager', 'admin']}>
+      <Page>
+        <DashboardShowcase />
+      </Page>
+    </RouteGuard>
   );
 }

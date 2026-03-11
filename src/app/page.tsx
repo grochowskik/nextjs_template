@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components';
+import { Button } from '@/ui';
 import { useRedirect } from '@/hooks';
 
 export default function Home() {

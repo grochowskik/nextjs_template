@@ -5,3 +5,4 @@ export { default as toastNotification } from './useNotification';
 export { default as usePagination } from './usePagination';
 export { default as useRedirect } from './useRedirect';
 export { useTablePageSize } from './useTablePageSize';
+export { usePrivileges } from './usePrivileges';

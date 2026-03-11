@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import userReducer, { setLoggedIn, setLifetime, setTimestamp } from '../user';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = { loggedIn: false, lifetime: null, timestamp: null };
+const initialState = { loggedIn: false, lifetime: null, timestamp: null, role: null, permissions: [] };
 
 describe('user slice', () => {
   describe('initial state', () => {
@@ -77,7 +77,7 @@ describe('user slice', () => {
 
   describe('action independence', () => {
     it('does not mutate other fields when setting loggedIn', () => {
-      const prev = { loggedIn: false, lifetime: 3600, timestamp: 999 };
+      const prev = { loggedIn: false, lifetime: 3600, timestamp: 999, role: null, permissions: [] as import('../user').Permission[] };
       const state = userReducer(prev, setLoggedIn({ isLoggedIn: true }));
       expect(state.lifetime).toBe(3600);
       expect(state.timestamp).toBe(999);
