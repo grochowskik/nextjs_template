@@ -1,19 +1,19 @@
+import { loginListener, responseErrorHandler } from '@/core';
 import axios, {
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
   AxiosError,
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
 } from 'axios';
-import { responseErrorHandler, loginListener } from '@/core';
-import SessionManager from './SessionManager';
-import RequestIdGenerator from './RequestIdGenerator';
 import ErrorClassifier from './ErrorClassifier';
+import RequestIdGenerator from './RequestIdGenerator';
+import SessionManager from './SessionManager';
 import {
-  RequestClassConfig,
   ApiResponse,
-  RequestMetadata,
-  InterceptorName,
   InterceptorConfig,
+  InterceptorName,
+  RequestClassConfig,
+  RequestMetadata,
 } from './types';
 
 type ConfigWithMetadata = InternalAxiosRequestConfig & {
@@ -82,7 +82,7 @@ export class RequestClass {
         }
 
         return config;
-      },
+      }
     );
   }
 
@@ -97,7 +97,7 @@ export class RequestClass {
         this.trackError(error);
         responseErrorHandler(error);
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -174,7 +174,7 @@ export class RequestClass {
         acc[`use-${key}` as keyof InterceptorConfig] = true;
         return acc;
       },
-      {} as InterceptorConfig,
+      {} as InterceptorConfig
     );
   }
 
