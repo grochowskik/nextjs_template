@@ -28,7 +28,7 @@ A production-ready Next.js starter for modern web applications. Ships with a com
 - **API middleware pipeline** — Axios instance with request IDs, session injection, error classification, retry with exponential back-off, and performance tracking
 - **Type-safe forms** — React Hook Form + Zod with co-located schemas and reusable field components
 - **Global state** — Redux Toolkit slices for auth and navigation history, persisted with redux-persist
-- **Server state** — TanStack Query for data fetching, caching, and mutations via thin `useApiQuery` / `useApiMutation` wrappers
+- **Server state** — TanStack Query for data fetching, caching, and mutations via typed `useGet`, `usePost`, `usePut`, `usePatch`, and `useDelete` hooks
 - **Auth skeleton** — login flow, `SessionManager`, and a login-listener response interceptor included
 - **RBAC / Privileges** — role and permission system baked into the user slice; `usePrivileges` hook and declarative `<RouteGuard>` component
 - **Microfrontend-ready feature structure** — domain code lives in `src/features/<name>/`, pages in `src/app/` are thin route handlers only
@@ -129,7 +129,7 @@ src/
  ├── core/
  │    ├── api/             # Domain API hooks (consumed by features)
  │    ├── middleware/      # RequestClass, ErrorClassifier, SessionManager,
- │    │                    # RequestIdGenerator, useApiQuery, useApiMutation
+ │    │                    # RequestIdGenerator, useGet, usePost, usePut, usePatch, useDelete
  │    └── RouteGuard.tsx   # Declarative auth/role/permission guard
  ├── hooks/                # Shared hooks: usePrivileges, useClickOutside,
  │                         # useEscapeKey, usePagination, useRedirect,
@@ -229,6 +229,59 @@ function NoteActions() {
 
 ---
 
+## API Hooks
+
+All HTTP methods are exposed as typed React hooks in `src/core/middleware/useApi.ts` and wrap TanStack Query under the hood.
+
+### Queries (GET)
+
+```ts
+import { useGet } from '@/core';
+
+const { data, isLoading, error } = useGet<ResponseType>('/endpoint', params, { enabled: true });
+```
+
+### Mutations (POST / PUT / PATCH / DELETE)
+
+```ts
+import { usePost, usePut, usePatch, useDelete } from '@/core';
+
+const { mutate, isPending } = usePost<RequestType, ResponseType>('/endpoint', {
+  invalidateQueriesList: ['/endpoint'],   // cache keys to invalidate on success
+  onSuccess: (data, variables) => { ... },
+  onError:   (error, variables) => { ... },
+});
+
+await mutate(payload);   // async, returns the response
+```
+
+`usePut`, `usePatch`, and `useDelete` share the same signature. DELETE sends the payload as the request body (`config.data`), consistent with the other methods.
+
+### Defining an API module
+
+```ts
+// src/core/api/notes/hooks.ts
+export const useNotesList  = (params?: NoteListRequest) =>
+  useGet<NoteListResponse>('/notes_list', params);
+
+export const useCreateNote = () =>
+  usePost<CreateNoteRequest, Note>('/notes_create', {
+    invalidateQueriesList: ['/notes_list'],
+  });
+
+export const useUpdateNote = () =>
+  usePatch<UpdateNoteRequest, Note>('/notes_update', {
+    invalidateQueriesList: ['/notes_list', '/note'],
+  });
+
+export const useCancelNote = () =>
+  useDelete<CancelNoteRequest, Note>('/notes_cancel', {
+    invalidateQueriesList: ['/notes_list', '/note'],
+  });
+```
+
+---
+
 ## Testing
 
 The template ships with a complete testing setup.
@@ -258,7 +311,7 @@ The dev server starts automatically when running E2E tests locally.
 | Formatters   | amounts, dates, bank accounts, card numbers, NIP, phone numbers                  |
 | Helpers      | `cn`, `sanitizeAmount`, `toBool`, `replaceComma`                                 |
 | Redux slices | `user` (with roles/permissions), `pageParams` — all actions, reducers, selectors |
-| Middleware   | `ErrorClassifier`, `SessionManager`, `RequestIdGenerator`                        |
+| Middleware   | `ErrorClassifier`, `SessionManager`, `RequestIdGenerator`, `useGet`, `usePost`, `usePut`, `usePatch`, `useDelete` |
 | Hooks        | `usePagination`, `useClickOutside`, `useEscapeKey`, `useTablePageSize`           |
 | API hooks    | `useNotesList`, `useCreateNote`, `useUpdateNote`, `useCancelNote`                |
 | Components   | Button, Toggle, Modal, Accordion, Tabs, FormInput, LoginForm                     |
@@ -300,7 +353,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 | --------------------- | -------------------------------------------------------------------------------------- |
 | Add a route           | Create a folder under `src/app/` following App Router conventions                      |
 | Add a feature         | Copy `src/features/_template/`, fill in api/, components/, hooks/, schemas/, index.ts  |
-| Add an API module     | Add typed hooks in `src/core/api/` using `useApiQuery` / `useApiMutation`              |
+| Add an API module     | Add typed hooks in `src/core/api/` using `useGet`, `usePost`, `usePut`, `usePatch`, or `useDelete` |
 | Add Redux state       | Create a slice in `src/redux/slice/` and register it in `src/redux/store.ts`           |
 | Add a UI component    | Place it in `src/ui/common/` with a co-located `.styles.ts`                            |
 | Add a role/permission | Extend `UserRole`, `Permission`, and `ROLE_PERMISSIONS` in `src/redux/slice/user.ts`   |
