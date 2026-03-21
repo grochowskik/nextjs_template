@@ -1,4 +1,4 @@
-import { useApiQuery, useApiMutation } from '@/core';
+import { useDelete, useGet, usePatch, usePost } from '@/core';
 import {
   CancelNoteRequest,
   CreateNoteRequest,
@@ -8,24 +8,28 @@ import {
   UpdateNoteRequest,
 } from './types';
 
+export const useNote = (params?: NoteListRequest) => {
+  return useGet<NoteListResponse>('/note', params);
+};
+
 export const useNotesList = (params?: NoteListRequest) => {
-  return useApiQuery<NoteListResponse>('/notes/list', params);
+  return useGet<NoteListResponse>('/notes_list', params);
 };
 
 export const useCreateNote = () => {
-  return useApiMutation<CreateNoteRequest, Note>('/notes/create', {
-    invalidateQueriesList: ['/notes/list'],
+  return usePost<CreateNoteRequest, Note>('/notes_create', {
+    invalidateQueriesList: ['/notes_list'],
   });
 };
 
 export const useUpdateNote = () => {
-  return useApiMutation<UpdateNoteRequest, Note>('/notes/update', {
-    invalidateQueriesList: ['/notes/list', '/notes/get'],
+  return usePatch<UpdateNoteRequest, Note>('/notes_update', {
+    invalidateQueriesList: ['/notes_list', '/note'],
   });
 };
 
 export const useCancelNote = () => {
-  return useApiMutation<CancelNoteRequest, Note>('/notes/cancel', {
-    invalidateQueriesList: ['/notes/list', '/notes/get'],
+  return useDelete<CancelNoteRequest, Note>('/notes_cancel', {
+    invalidateQueriesList: ['/notes_list', '/note'],
   });
 };

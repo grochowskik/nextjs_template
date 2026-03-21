@@ -4,8 +4,6 @@ export type Nav = {
 };
 
 export const navigation: Nav[] = [
-  { name: 'Lists', href: '/lists' },
-  { name: 'Tasks', href: '/tasks' },
-  { name: 'Today', href: '/today' },
+  { name: 'Notes', href: '/notes' },
   { name: 'Upcoming', href: '/upcoming' },
 ];
