@@ -8,4 +8,5 @@ export {
   usePatch,
   usePost,
   usePut,
+  useQueryPost,
 } from './middleware/useApi';
